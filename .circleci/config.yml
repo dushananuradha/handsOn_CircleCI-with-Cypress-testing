@@ -1,21 +1,22 @@
 version: 2.1
-
+executors:
+  node-executor:
+    docker:
+      - image: cimg/node:21.6.0 cimg/base:2024.01
+  docker-executor:
+    docker:
+      - image: cimg/base:2024.01
 jobs:
   build:
-    docker:
-      - image: cimg/node:21.6.0
+    executor: node-executor
     steps:
       - checkout
       - run: node --version
-      - run: echo "Say hello to YAML!"
-
   say_hello:
+    executor: docker-executor
     steps:
       - run: echo "Say hello to YAML!"
-
 workflows:
-  # Name of workflow
   greet_user:
-    # List of jobs that will run
     jobs:
       - say_hello
