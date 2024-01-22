@@ -7,3 +7,15 @@ jobs:
     steps:
       - checkout
       - run: node --version
+      - run: echo "Say hello to YAML!"
+
+  say_hello:
+    steps:
+      - run: echo "Say hello to YAML!"
+
+workflows:
+  # Name of workflow
+  greet_user:
+    # List of jobs that will run
+    jobs:
+      - say_hello
