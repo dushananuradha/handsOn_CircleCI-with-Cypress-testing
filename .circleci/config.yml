@@ -19,4 +19,8 @@ jobs:
 workflows:
   greet_user:
     jobs:
-      - say_hello
+      - say_hello:
+            filters:
+              branches:
+                only:
+                  - main
