@@ -2,7 +2,7 @@ version: 2.1
 executors:
   node-executor:
     docker:
-      - image: cimg/node:21.6.0 cimg/base:2024.01
+      - image: cimg/node:21.6.0
   docker-executor:
     docker:
       - image: cimg/base:2024.01
