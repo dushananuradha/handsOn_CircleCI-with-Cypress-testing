@@ -21,7 +21,12 @@ jobs:
       - checkout
       - run: npm install
       - run: npm run build
-      - run: npm start
+      - run: npm start &  # Run npm start in the background
+      - run: sleep 10    # Add a delay to allow npm start to start the server
+      - persist_to_workspace:
+          root: ~/tmp
+          paths:
+            - .  # Persist the working directory for future jobs
       
   run_test:
     executor: cypress/default
