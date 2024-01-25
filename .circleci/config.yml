@@ -1,4 +1,6 @@
 version: 2.1
+orbs:
+  cypress: cypress-io/cypress@3
 executors:
   node-executor:
     docker:
@@ -7,20 +9,39 @@ executors:
     docker:
       - image: cimg/base:2024.01
 jobs:
-  build:
-    executor: node-executor
-    steps:
-      - checkout
-      - run: node --version
   say_hello:
     executor: docker-executor
     steps:
       - run: echo "Say hello to YAML!"
+  build_react_app:
+    working_directory: ~/tmp
+    executor: node-executor
+    steps:
+      - checkout
+      - run: npm install
+      - run: npm run build
+  run_test:
+    executor: cypress/default
+    steps:
+      - checkout
+      - run: npm start
+
+
 workflows:
+  version: 2
   greet_user:
     jobs:
-      - say_hello:
+      - build_react_app:
             filters:
               branches:
                 only:
                   - main
+  run-tests-and-publish:
+    jobs:
+      - build_react_app
+      - run_test:
+          requires:
+            - build_react_app
+          filters:
+            branches:
+              only: master
