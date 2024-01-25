@@ -7,8 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "build": "react-scripts build",
-    "cy:run": "cypress run"
+    "cy:open": "cypress open",
+    "cy:run:headless":"cypress run --headless --browser chrome"
   },
   "dependencies": {
     "next": "14.0.4",

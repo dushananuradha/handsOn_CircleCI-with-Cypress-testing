@@ -13,6 +13,7 @@ jobs:
     executor: docker-executor
     steps:
       - run: echo "Say hello to YAML!"
+
   build_react_app:
     working_directory: ~/tmp
     executor: node-executor
@@ -20,11 +21,13 @@ jobs:
       - checkout
       - run: npm install
       - run: npm run build
+      - run: npm start
+      
   run_test:
     executor: cypress/default
     steps:
       - checkout
-      - run: npm start
+      - run: npm run cy:run:headless
 
 
 workflows:
@@ -36,7 +39,7 @@ workflows:
               branches:
                 only:
                   - main
-  run-tests-and-publish:
+  run-cypress-tests:
     jobs:
       - build_react_app
       - run_test:
