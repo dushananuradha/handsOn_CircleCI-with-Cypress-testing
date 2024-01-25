@@ -53,4 +53,4 @@ workflows:
             - build_react_app
           filters:
             branches:
-              only: master
+              only: main
