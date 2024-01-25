@@ -1,4 +1,6 @@
 version: 2.1
+orbs:
+  cypress: cypress-io/cypress@3
 executors:
   node-executor:
     docker:
@@ -7,20 +9,48 @@ executors:
     docker:
       - image: cimg/base:2024.01
 jobs:
-  build:
-    executor: node-executor
-    steps:
-      - checkout
-      - run: node --version
   say_hello:
     executor: docker-executor
     steps:
       - run: echo "Say hello to YAML!"
+
+  build_react_app:
+    working_directory: ~/tmp
+    executor: node-executor
+    steps:
+      - checkout
+      - run: npm install
+      - run: npm run build
+      - run: npm start &  # Run npm start in the background
+      - run: sleep 10    # Add a delay to allow npm start to start the server
+      - persist_to_workspace:
+          root: ~/tmp
+          paths:
+            - .  # Persist the working directory for future jobs
+      
+  run_test:
+    working_directory: ~/tmp
+    executor: cypress/default
+    steps:
+      - checkout
+      - run: npm run cy:run:headless
+
+
 workflows:
-  greet_user:
+  version: 2
+  # greet_user:
+  #   jobs:
+  #     - say_hello:
+  #           filters:
+  #             branches:
+  #               only:
+  #                 - main
+  run-cypress-tests:
     jobs:
-      - say_hello:
-            filters:
-              branches:
-                only:
-                  - main
+      - build_react_app
+      - run_test:
+          requires:
+            - build_react_app
+          filters:
+            branches:
+              only: master
