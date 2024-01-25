@@ -1,6 +1,5 @@
 version: 2.1
-orbs:
-  cypress: cypress-io/cypress@3
+
 executors:
   node-executor:
     docker:
@@ -8,6 +7,10 @@ executors:
   docker-executor:
     docker:
       - image: cimg/base:2024.01
+  cypress-executor:
+    docker:
+      - image: cimg/base:2024.01
+
 jobs:
   say_hello:
     executor: docker-executor
@@ -30,7 +33,7 @@ jobs:
       
   run_test:
     working_directory: ~/tmp
-    executor: cypress/default
+    executor: cypress-executor
     steps:
       - checkout
       - run: npm run cy:run:headless
